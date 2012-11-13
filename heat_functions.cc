@@ -1,22 +1,23 @@
 #include "heat_functions.h"
 
+using std::ofstream;
 
-int heat_initialize(doubleVector &init, const int nx, const double dx){
+int heat_vec1ialize(doubleVector &vec1, const int nx, const double dx){
 
-  init.resize(nx);
+  vec1.resize(nx);
   for (int i = 0 ; i < nx ; ++i){
-    init[i].resize(nx);
+    vec1[i].resize(nx);
   }
 
   for (int i = 0 ; i < nx ; ++i ){
     for ( int j = 0 ; j < nx; ++j){
       // evaluates boundary conditions. 
       if ( j == 0 ){
-        init[i][j] = cos(i * dx) * cos(i*dx);
+        vec1[i][j] = cos(i * dx) * cos(i*dx);
       }else if ( j == (nx-1)) {
-        init[i][j] = sin( i * dx) * sin(i *dx);
+        vec1[i][j] = sin( i * dx) * sin(i *dx);
       } else{
-      init[i][j] = 0.0;
+      vec1[i][j] = 0.0;
       }
     }
   }
@@ -24,20 +25,23 @@ int heat_initialize(doubleVector &init, const int nx, const double dx){
   return 0;
 }
 
-int heat_solve( doubleVector &init, doubleVector &end, double k,
+int heat_solve( doubleVector &vec1, doubleVector &vec2, double k,
    double dx, double dt, int nx, int tsteps ) {
 
   int count = 0;
   for (int i = 0 ; i < tsteps; i++){
-    heat_step(init, end, k, dx, dt, nx);
-    //std::cout << end[1][1] << std::endl;
-    if (end[1][1] != end[1][1]){ 
+    count++;
+    if ( i % 2 == 0 ) {
+      heat_step(vec1, vec2, k, dx, dt, nx);
+    }else {
+      heat_step(vec2, vec1, k, dx, dt, nx);
+    }
+    std::copy(vec2.begin(), vec2.end(), vec1.begin());
+    if ((vec2[1][1] != vec2[1][1]) || (vec1[1][1] != vec1[1][1])){ 
       std::cout << "diverged after " << count << " iterations";
       std::cout << std::endl;
       exit(1);
     }
-    std::copy(end.begin(), end.end(), init.begin());
-    count++;
   }
   return 0;
 }
@@ -46,7 +50,7 @@ int heat_solve( doubleVector &init, doubleVector &end, double k,
 int heat_step(const doubleVector &current, doubleVector &next , const double &k,
    const double &dx, const double &dt, const int &nx) {
 
-  std::cout << "iter" << std::endl;
+  //std::cout << "iter" << std::endl;
 
   for (int i = 0; i < nx; i++){
     for (int j = 0; j <nx; j++){
@@ -71,11 +75,41 @@ int heat_step(const doubleVector &current, doubleVector &next , const double &k,
         //std::cout << i << " " << j << std::endl;
         //std::cout << w << " " << e << " " << n << " ";
         //std::cout << s << " " << c << " " << std::endl;
-        next[i][j] = c + dt * ( w + e + n + s - 4 * c) / (dx * dx);
+        next[i][j] = c + dt * k * ( w + e + n + s - 4 * c) / (dx * dx);
       }
     }
   }
 
   return 0;
+}
 
+int heat_write_contour( const doubleVector &vec2, double dx, int nx ){
+
+  // writes files to be plotted 
+  ofstream output;
+  output.open("output.dat");
+  for (int i = 0 ; i < nx ; ++i ){
+    for ( int j = 0 ; j < nx; ++j){
+      output <<  i * dx << " ";
+      output <<  j * dx << " ";
+      output << vec2[i][j] << std::endl;
+      if( i == (nx-1) && j == (nx-1)){
+        output << std::endl;
+      }
+    }
+  }
+  output.close();
+  
+  
+  // forms a contour plot of the output data. 
+  FILE *in;
+  char buff[512];
+  if(!( in = popen("gnuplot heat_plot.gnu","r"))){
+    exit(1);
+  }
+  while(fgets(buff,sizeof(buff),in)!=NULL){
+    std::cout << buff;
+  }
+  pclose(in);
+  return 0;
 }
