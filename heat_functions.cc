@@ -99,6 +99,24 @@ int heat_step(const doubleArray &current, doubleArray &next , const double &k,
   return 0;
 }
 
+
+double heat_average(const doubleArray &arr, int nx) {
+
+  double taverage;
+  double sumT = 0.0;
+  double N = nx * nx ;
+
+  for( int i=0 ; i < nx ; i++ )
+  {
+    for( int j=0 ; j < nx  ; j++ )
+    {
+      sumT = sumT + arr[i][j];
+    }
+    
+  }
+  return taverage = sumT / N; 
+}
+
 int heat_write_contour( const doubleArray &arr2, double dx, int nx ){
 
   // writes files to be plotted 

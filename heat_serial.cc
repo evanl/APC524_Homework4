@@ -13,6 +13,7 @@ const double PI = 3.14159265359;
 
 int main (int argc, const char *argv[] ){
 
+  clock_t beginTime = clock();
   // process command line argument. 
   if (argc != 2){
     printf( "Invalid input, please specify nx \n ");
@@ -43,8 +44,14 @@ int main (int argc, const char *argv[] ){
   // solve equation. 
   heat_solve(arr1, arr2, k, dx, dt, nx, tsteps);
 
-  int tcompute = clock();
-  std::cout << "time to compute [seconds]" << ((double)tcompute)/CLOCKS_PER_SEC;
+  double taverage;
+
+  taverage = heat_average(arr2, nx); 
+
+  std::cout << "t_average = " << taverage << std::endl;
+
+  std::cout << "time to compute [seconds] = "; 
+  std::cout << ((double)(clock()-beginTime))/CLOCKS_PER_SEC;
   std::cout << std::endl;
 
   

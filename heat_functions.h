@@ -22,6 +22,8 @@ int heat_solve( doubleArray &arr1, doubleArray &arr2, double k,
 int heat_step(const doubleArray &current, doubleArray &next , const double &k,
    const double &dx, const double &dt, const int  &nx); 
 
+double heat_average(const doubleArray &arr, int nx);
+
 int heat_write_contour( const doubleArray &arr2, double dx, int nx );
 
 #endif // HEAT_FUNCTIONS
