@@ -2,7 +2,7 @@
 
 using std::ofstream;
 
-int heat_vec1ialize(doubleVector &vec1, const int nx, const double dx){
+int heat_initialize(doubleVector &vec1, const int nx, const double dx){
 
   vec1.resize(nx);
   for (int i = 0 ; i < nx ; ++i){
@@ -102,14 +102,14 @@ int heat_write_contour( const doubleVector &vec2, double dx, int nx ){
   
   
   // forms a contour plot of the output data. 
-  FILE *in;
-  char buff[512];
-  if(!( in = popen("gnuplot heat_plot.gnu","r"))){
-    exit(1);
-  }
-  while(fgets(buff,sizeof(buff),in)!=NULL){
-    std::cout << buff;
-  }
-  pclose(in);
+  //FILE *in;
+  //char buff[512];
+  //if(!( in = popen("gnuplot heat_plot.gnu","r"))){
+  //  exit(1);
+  //}
+  //while(fgets(buff,sizeof(buff),in)!=NULL){
+  //  std::cout << buff;
+  // }
+  //pclose(in);
   return 0;
 }

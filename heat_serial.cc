@@ -31,6 +31,7 @@ int main (int argc, const char *argv[] ){
   std::cout << "k  = " << k << std::endl;
   std::cout << "tmax = " << tmax << std::endl;
   std::cout << "dt = " << dt << std::endl;
+  std::cout << "tsteps = " << tsteps << std::endl;
 
   doubleVector vec1, vec2;
  
