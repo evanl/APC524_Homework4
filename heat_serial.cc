@@ -33,13 +33,15 @@ int main (int argc, const char *argv[] ){
   std::cout << "dt = " << dt << std::endl;
   std::cout << "tsteps = " << tsteps << std::endl;
 
-  doubleVector vec1, vec2;
+  doubleArray arr1, arr2;
+  arr1 = doubleArrayCreate(nx);
+  arr2 = doubleArrayCreate(nx);
  
-  heat_initialize(vec1, nx, dx);
-  heat_initialize(vec2, nx, dx); 
+  heat_initialize(arr1, nx, dx);
+  heat_initialize(arr2, nx, dx); 
 
   // solve equation. 
-  heat_solve(vec1, vec2, k, dx, dt, nx, tsteps);
+  heat_solve(arr1, arr2, k, dx, dt, nx, tsteps);
 
   int tcompute = clock();
   std::cout << "time to compute [seconds]" << ((double)tcompute)/CLOCKS_PER_SEC;
@@ -47,7 +49,7 @@ int main (int argc, const char *argv[] ){
 
   
   // Write the file to output.dat, generate contour plot. 
-  heat_write_contour( vec2, dx, nx );
+  heat_write_contour( arr2, dx, nx );
 
   return 0;
 }
