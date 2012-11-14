@@ -4,3 +4,6 @@
 *.swp
 *.dat
 *.o
+./heat_serial
+./heat_omp
+./heat_mpi
