@@ -13,7 +13,9 @@ const double PI = 3.14159265359;
 
 int main (int argc, const char *argv[] ){
 
-  clock_t beginTime = clock();
+  time_t beginTime; 
+  beginTime = time(NULL);
+
   // process command line argument. 
   if (argc != 2){
     printf( "Invalid input, please specify nx \n ");
@@ -42,7 +44,7 @@ int main (int argc, const char *argv[] ){
   heat_initialize(arr2, nx, dx); 
 
   // solve equation. 
-  heat_solve(arr1, arr2, k, dx, dt, nx, tsteps);
+  heat_solve(arr1, arr2, k, dx, dt, nx, tsteps,1);
 
   double taverage;
 
@@ -51,12 +53,15 @@ int main (int argc, const char *argv[] ){
   std::cout << "t_average = " << taverage << std::endl;
 
   std::cout << "time to compute [seconds] = "; 
-  std::cout << ((double)(clock()-beginTime))/CLOCKS_PER_SEC;
+  std::cout << ((double)(time(NULL)-beginTime));
   std::cout << std::endl;
 
   
-  // Write the file to output.dat, generate contour plot. 
+  // Write the file to output.dat
   heat_write_contour( arr2, dx, nx );
+  
+  doubleArrayRemove(arr1, nx);
+  doubleArrayRemove(arr2, nx);
 
   return 0;
 }

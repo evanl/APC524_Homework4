@@ -1,5 +1,5 @@
 # 
-set dgrid3d 512,512
+set dgrid3d 256,256
 set pm3d
 set style data dots
 set xlabel "X - axis"
