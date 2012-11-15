@@ -45,18 +45,11 @@ int heat_initialize(doubleArray &arr1, const int nx, const double dx){
 int heat_solve( doubleArray &arr1, doubleArray &arr2, double k,
    double dx, double dt, int nx, int tsteps,  int nthreads  ) {
 
-  int count = 0;
   for (int i = 0 ; i < tsteps; i++){
-    count++;
     if ( i % 2 == 0 ) {
       heat_step(arr1, arr2, k, dx, dt, nx, nthreads);
     }else {
       heat_step(arr2, arr1, k, dx, dt, nx, nthreads);
-    }
-    if ((arr2[1][1] != arr2[1][1]) || (arr1[1][1] != arr1[1][1])){ 
-      std::cout << "diverged after " << count << " iterations";
-      std::cout << std::endl;
-      exit(1);
     }
   }
   return 0;
@@ -66,7 +59,6 @@ int heat_solve( doubleArray &arr1, doubleArray &arr2, double k,
 int heat_step(const doubleArray &current, doubleArray &next , const double &k,
    const double &dx, const double &dt, const int &nx,  int nthreads ) {
 
-  //std::cout << "iter" << std::endl;
 
   for (int i = 0; i < nx; i++){
     for (int j = 0; j <nx; j++){
@@ -88,9 +80,6 @@ int heat_step(const doubleArray &current, doubleArray &next , const double &k,
         s = current[i][j-1];
         c = current[i][j];
 
-        //std::cout << i << " " << j << std::endl;
-        //std::cout << w << " " << e << " " << n << " ";
-        //std::cout << s << " " << c << " " << std::endl;
         next[i][j] = c + dt * k * ( w + e + n + s - 4 * c) / (dx * dx);
       }
     }
