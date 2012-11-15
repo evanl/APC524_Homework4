@@ -5,6 +5,7 @@
 #include <time.h>
 #include <math.h>
 #include <vector>
+#include <omp.h>
 #include "heat_functions.h"
 
 using std::vector;
@@ -44,7 +45,7 @@ int main (int argc, const char *argv[] ){
   heat_initialize(arr1, nx, dx);
   heat_initialize(arr2, nx, dx); 
 
-  // solve equation. 
+  omp_set_num_threads(nthreads);
   heat_solve(arr1, arr2, k, dx, dt, nx, tsteps, nthreads);
 
   double taverage;
@@ -59,7 +60,7 @@ int main (int argc, const char *argv[] ){
 
   
   // Write the file to output.dat
-  heat_write_contour( arr2, dx, nx );
+  heat_write( arr2, dx, nx );
 
   doubleArrayRemove(arr1 ,nx);
   doubleArrayRemove(arr2 ,nx );

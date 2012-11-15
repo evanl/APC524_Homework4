@@ -14,7 +14,7 @@ doubleArray doubleArrayCreate(int nx){
   return arr;
 }
 
-int doubleArrayRemove(doubleArray &arr1, int nx){
+int doubleArrayRemove(doubleArray arr1, int nx){
 
   for (int i=0; i < nx; ++i ){
    delete [] arr1[i];
@@ -24,7 +24,7 @@ int doubleArrayRemove(doubleArray &arr1, int nx){
   return 0;
 }
 
-int heat_initialize(doubleArray &arr1, const int nx, const double dx){
+int heat_initialize(doubleArray arr1, const int nx, const double dx){
 
   for (int i = 0 ; i < nx ; ++i ){
     for ( int j = 0 ; j < nx; ++j){
@@ -42,7 +42,7 @@ int heat_initialize(doubleArray &arr1, const int nx, const double dx){
   return 0;
 }
 
-int heat_solve( doubleArray &arr1, doubleArray &arr2, double k,
+int heat_solve( doubleArray arr1, doubleArray arr2, double k,
    double dx, double dt, int nx, int tsteps,  int nthreads  ) {
 
   for (int i = 0 ; i < tsteps; i++){
@@ -56,32 +56,27 @@ int heat_solve( doubleArray &arr1, doubleArray &arr2, double k,
 }
 
 
-int heat_step(const doubleArray &current, doubleArray &next , const double &k,
+int heat_step(const doubleArray current, doubleArray next , const double &k,
    const double &dx, const double &dt, const int &nx,  int nthreads ) {
 
+  for( int j=1 ; j < (nx-1) ; j++ )
+  {
 
-  for (int i = 0; i < nx; i++){
-    for (int j = 0; j <nx; j++){
-      double w, e, s, n, c;
+    next[0][j] = current[0][j] + dt * k * ( current[nx-1][j] + current[1][j] + current[0][j+1] + current[0][j-1] - 4 * current[0][j]) / ( dx * dx);
 
-      if ((j!=0) && (j != (nx-1))){
+    next[nx-1][j] = current[nx-1][j] + dt * k * ( current[0][j] + current[1][j] + current[nx-1][j+1] + current[nx-1][j-1] - 4 * current[nx-1][j]) / ( dx * dx);
+  }
+  
 
-        if (i==0){
-          w = current[nx-1][j];
-        }else{
-          w = current[i-1][j];
-        }
-        if (i == (nx-1)){
-          e = current[0][j];
-        }else{
-          e = current[i+1][j];
-        }
-        n = current[i][j+1];
-        s = current[i][j-1];
-        c = current[i][j];
+  for (int i = 1; i < (nx-1); i++){
+    for (int j = 1; j < (nx-1) ; j++){
 
-        next[i][j] = c + dt * k * ( w + e + n + s - 4 * c) / (dx * dx);
-      }
+      double t = 0.0; 
+
+      t = t + current[i-1][j] + current[i+1][j] + current[i][j+1] + current[i][j-1];
+
+      next[i][j] = current[i][j] + dt * k * ( t - 4 * current[i][j]) / (dx * dx);
+
     }
   }
 
@@ -89,7 +84,7 @@ int heat_step(const doubleArray &current, doubleArray &next , const double &k,
 }
 
 
-double heat_average(const doubleArray &arr, int nx) {
+double heat_average(const doubleArray arr, int nx) {
 
   double taverage;
   double sumT = 0.0;
@@ -106,9 +101,8 @@ double heat_average(const doubleArray &arr, int nx) {
   return taverage = sumT / N; 
 }
 
-int heat_write_contour( const doubleArray &arr2, double dx, int nx ){
+int heat_write( const doubleArray arr2, double dx, int nx ){
 
-  // writes files to be plotted 
   ofstream output;
   output.open("output.dat");
   for (int i = 0 ; i < nx ; ++i ){
@@ -124,15 +118,5 @@ int heat_write_contour( const doubleArray &arr2, double dx, int nx ){
   output.close();
   
   
-  // forms a contour plot of the output data. 
-  //FILE *in;
-  //char buff[512];
-  //if(!( in = popen("gnuplot heat_plot.gnu","r"))){
-  //  exit(1);
-  //}
-  //while(fgets(buff,sizeof(buff),in)!=NULL){
-  //  std::cout << buff;
-  // }
-  //pclose(in);
   return 0;
 }
