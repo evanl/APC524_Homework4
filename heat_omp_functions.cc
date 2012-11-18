@@ -44,13 +44,13 @@ int heat_initialize(doubleArray arr1, const int nx, const double dx){
 }
 
 int heat_solve( doubleArray arr1, doubleArray arr2, double k,
-   double dx, double dt, int nx, int tsteps,  int nthreads  ) {
+   double dx, double dt, int nx, int tsteps) {
 
   for (int i = 0 ; i < tsteps; i++){
     if ( i % 2 == 0 ) {
-      heat_step(arr1, arr2, k, dx, dt, nx, nthreads);
+      heat_step(arr1, arr2, k, dx, dt, nx);
     }else {
-      heat_step(arr2, arr1, k, dx, dt, nx, nthreads);
+      heat_step(arr2, arr1, k, dx, dt, nx);
     }
   }
   return 0;
@@ -58,7 +58,7 @@ int heat_solve( doubleArray arr1, doubleArray arr2, double k,
 
 
 int heat_step(const doubleArray current, doubleArray next , const double &k,
-   const double &dx, const double &dt, const int &nx,  int nthreads  ) {
+   const double &dx, const double &dt, const int &nx) {
 
   for( int j=1 ; j < (nx-1) ; j++ )
   {

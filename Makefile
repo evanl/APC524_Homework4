@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -g -Wall -fopenmp -Ofast
+CXXFLAGS = -g -Wall -fopenmp -O3
 SERIALOBJS = heat_serial.o heat_functions.o
 OMPOBJS = heat_omp.o heat_omp_functions.o
 

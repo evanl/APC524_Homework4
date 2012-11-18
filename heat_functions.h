@@ -17,10 +17,10 @@ int doubleArrayRemove(doubleArray arr1, int nx);
 int heat_initialize(doubleArray arr1, const int nx, const double dx);
 
 int heat_solve( doubleArray arr1, doubleArray arr2, double k,
-   double dx, double dt, int nx, int tsteps ,  int nthreads  ) ;
+   double dx, double dt, int nx, int tsteps ) ;
   
 int heat_step(const doubleArray current, doubleArray next , const double &k,
-   const double &dx, const double &dt, const int  &nx,  int nthreads ); 
+   const double &dx, const double &dt, const int  &nx  ); 
 
 double heat_average(const doubleArray arr, int nx);
 

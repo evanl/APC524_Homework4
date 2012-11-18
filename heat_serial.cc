@@ -43,7 +43,7 @@ int main (int argc, const char *argv[] ){
   heat_initialize(arr1, nx, dx);
   heat_initialize(arr2, nx, dx); 
 
-  heat_solve(arr1, arr2, k, dx, dt, nx, tsteps,1);
+  heat_solve(arr1, arr2, k, dx, dt, nx, tsteps);
 
   double taverage;
 

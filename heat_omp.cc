@@ -46,7 +46,7 @@ int main (int argc, const char *argv[] ){
   heat_initialize(arr2, nx, dx); 
 
   omp_set_num_threads(nthreads);
-  heat_solve(arr1, arr2, k, dx, dt, nx, tsteps, nthreads);
+  heat_solve(arr1, arr2, k, dx, dt, nx, tsteps);
 
   double taverage;
 
