@@ -4,7 +4,6 @@
 #include <fstream>
 #include <time.h>
 #include <math.h>
-#include <vector>
 #include "heat_functions.h"
 
 using std::vector;

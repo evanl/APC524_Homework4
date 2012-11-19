@@ -11,6 +11,7 @@ heat_serial: $(SERIALOBJS)
 heat_omp: $(OMPOBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
+
 clean:
 	$(RM) *.o
 	$(RM) .depend

@@ -7,3 +7,4 @@
 heat_serial
 heat_omp
 heat_mpi
+*.out
