@@ -7,4 +7,4 @@ set ylabel "Y - axis"
 set zlabel "Temperature - K"
 set terminal png 
 set output 'Heat.png'
-splot 'output.dat' notitle
+splot 'output0.dat' notitle
