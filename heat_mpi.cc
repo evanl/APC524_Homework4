@@ -43,12 +43,14 @@ int main (int argc, char *argv[] ){
   
   /* initialize process in each thread.  */
   int numtasks, rank, next, prev, rc, nxproc;
-  double proc_origin;
+  double proc_origin, taverage;
   MPI_Status stats ;
 
   double lbuf[nx], rbuf[nx];
+  double lsend[nx], rsend[nx];
   nxproc = nx / num_processors;
 
+  
   // parallel code 
   rc = MPI_Init( &argc, &argv);
   if (rc != MPI_SUCCESS){
@@ -75,44 +77,49 @@ int main (int argc, char *argv[] ){
   arr1 = doubleArrayCreate(nx,nxproc);
   arr2 = doubleArrayCreate(nx,nxproc);
  
+  proc_origin = rank * PI / numtasks;
+
   heat_initialize(arr1, nx, nxproc, proc_origin, dx);
   heat_initialize(arr2, nx, nxproc, proc_origin, dx); 
 
+  std::cout << "nx_proc = " << nxproc << std::endl;
+  std::cout << "proc_origin = " << proc_origin << std::endl;
   int token = 0;
+
+   //solve routine. 
   for (int i = 0 ; i < tsteps; i++){
     if ( i % 2 == 0 ) {
       
-      MPI_Send(&arr1[0],        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
-      MPI_Send(&arr1[nxproc-1], nx , MPI_DOUBLE, prev, token, MPI_COMM_WORLD );
-     
-      MPI_Recv(&lbuf, nx, MPI_DOUBLE, prev, token, MPI_COMM_WORLD, &stats);
+      MPI_Send(&rsend,        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
       MPI_Recv(&rbuf, nx, MPI_DOUBLE, next, token, MPI_COMM_WORLD, &stats);
-  
+
+      MPI_Send(&lsend, nx , MPI_DOUBLE, prev, token, MPI_COMM_WORLD );
+      MPI_Recv(&lbuf, nx, MPI_DOUBLE, prev, token, MPI_COMM_WORLD, &stats);
+
+      
       heat_step(arr1, arr2, k, dx, dt, nx, nxproc, lbuf, rbuf);
     }else {
-      MPI_Send(&arr2[0],        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
-      MPI_Send(&arr2[nxproc-1], nx , MPI_DOUBLE, prev, token, MPI_COMM_WORLD );
-     
-      MPI_Recv(&lbuf, nx, MPI_DOUBLE, prev, token, MPI_COMM_WORLD, &stats);
+      
+      MPI_Send(&rsend,        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
       MPI_Recv(&rbuf, nx, MPI_DOUBLE, next, token, MPI_COMM_WORLD, &stats);
+
+      MPI_Send(&lsend, nx , MPI_DOUBLE, prev, token, MPI_COMM_WORLD );
+      MPI_Recv(&lbuf, nx, MPI_DOUBLE, prev, token, MPI_COMM_WORLD, &stats);
   
       heat_step(arr2, arr1, k, dx, dt, nx, nxproc, lbuf, rbuf);
     }
   }
 
   // Write the file to output.dat
-  heat_write( arr2, dx, nx, nxproc );
+  heat_write( arr2, dx, nx, nxproc ,rank);
         
-  MPI_Finalize();
-
-  // ????????????????????????????????????????????????????
-
   /* get local averages and sum up to get total average */ 
-  double taverage;
 
-  taverage = heat_average(arr2, nx, nxproc); 
+  //taverage = heat_average(arr2, nx, nxproc); 
 
   std::cout << "t_average = " << taverage << std::endl;
+
+  MPI_Finalize();
 
   std::cout << "time to compute [seconds] = "; 
   std::cout << ((double)(time(NULL)-beginTime));
@@ -120,8 +127,8 @@ int main (int argc, char *argv[] ){
 
   
   
-  doubleArrayRemove(arr1, nx);
-  doubleArrayRemove(arr2, nx);
+  //doubleArrayRemove(arr1, nx);
+  //doubleArrayRemove(arr2, nx);
 
   return 0;
 }

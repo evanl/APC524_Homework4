@@ -22,6 +22,6 @@ int heat_step(const doubleArray current, doubleArray next , double k,
 
 double heat_average(const doubleArray arr, const int nx, const int nxproc);
 
-int heat_write( const doubleArray arr2, double dx, const int nx , const int nxproc);
+int heat_write( const doubleArray arr2, double dx, const int nx , const int nxproc, const int rank);
 
 #endif // HEAT_MPI_FUNCTIONS

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mpiCC -g -Wall -O3 -c heat_mpi_functions.cc heat_mpi.cc
+mpiCC -g -Wall -O3 -o heat_mpi heat_mpi_functions.o heat_mpi.o
