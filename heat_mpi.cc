@@ -95,10 +95,10 @@ int main (int argc, char *argv[] ){
         lsend[i] = arr1[nxproc-1][i];
       }
 
-      MPI_Send(&rsend,        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
-      MPI_Recv(&rbuf, nx, MPI_DOUBLE, next, token, MPI_COMM_WORLD, &stats);
-
       MPI_Send(&lsend, nx , MPI_DOUBLE, prev, token, MPI_COMM_WORLD );
+      MPI_Recv(&rbuf, nx, MPI_DOUBLE, next, token, MPI_COMM_WORLD, &stats);
+      
+      MPI_Send(&rsend,        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
       MPI_Recv(&lbuf, nx, MPI_DOUBLE, prev, token, MPI_COMM_WORLD, &stats);
       
       heat_step(arr1, arr2, k, dx, dt, nx, nxproc, lbuf, rbuf);
@@ -109,10 +109,11 @@ int main (int argc, char *argv[] ){
         rsend[i] = arr2[0][i]; 
         lsend[i] = arr2[nxproc-1][i];
       }
-      MPI_Send(&rsend,        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
-      MPI_Recv(&rbuf, nx, MPI_DOUBLE, next, token, MPI_COMM_WORLD, &stats);
 
       MPI_Send(&lsend, nx , MPI_DOUBLE, prev, token, MPI_COMM_WORLD );
+      MPI_Recv(&rbuf, nx, MPI_DOUBLE, next, token, MPI_COMM_WORLD, &stats);
+      
+      MPI_Send(&rsend,        nx , MPI_DOUBLE, next, token, MPI_COMM_WORLD );
       MPI_Recv(&lbuf, nx, MPI_DOUBLE, prev, token, MPI_COMM_WORLD, &stats);
   
       heat_step(arr2, arr1, k, dx, dt, nx, nxproc, lbuf, rbuf);
