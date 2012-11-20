@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # parallel/serial job using 1 node and 8 processor cores per node, runs for 4hrs
-#PBS -l nodes=1:ppn=8,walltime=04:00:00
+#PBS -l nodes=22:ppn=8,walltime=04:00:00
 # 
 # send email on abortion, beginning and ending
 #PBS -m abe
@@ -16,7 +16,5 @@ cd ~/Documents/Fall_2012/APC/Assignments/Homework_04/
 
 for nx in 128 256 512 1024
 do 
-  ./heat_omp $nx 1 > heat_omp.$nx.1.out
-  ./heat_serial $nx > heat_serial.$nx.out
-  mpiexec --mca btl ^openib ./heat_mpi $nx 1 > heat_mpi.$nx.1.out
+  mpiexec --mca btl ^openib ./heat_mpi $nx 8 > heat_mpi.$nx.8.out
 done

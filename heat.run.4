@@ -17,4 +17,5 @@ cd ~/Documents/Fall_2012/APC/Assignments/Homework_04/
 for nx in 128 256 512 1024
 do 
   ./heat_omp $nx 4 > heat_omp.$nx.4.out
+  mpiexec --mca btl ^openib ./heat_mpi $nx 4 > heat_mpi.$nx.4.out
 done
