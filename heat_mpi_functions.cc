@@ -14,9 +14,9 @@ doubleArray doubleArrayCreate(const int nx, const int nxproc){
   return arr;
 }
 
-int doubleArrayRemove(doubleArray arr1, const int nx){
+int doubleArrayRemove(doubleArray arr1, const int nx , const int nxproc){
 
-  for (int i=0; i < nx; ++i ){
+  for (int i=0; i < nxproc; ++i ){
    delete [] arr1[i];
   }
   delete [] arr1; 
@@ -77,7 +77,7 @@ double heat_average(const doubleArray arr, const int nx, const int nxproc) {
 
   double taverage;
   double sumT = 0.0;
-  double N = nxproc * nxproc ;
+  double N = nx * nxproc ;
 
   for( int i=0 ; i < nxproc ; i++ )
   {
@@ -90,19 +90,19 @@ double heat_average(const doubleArray arr, const int nx, const int nxproc) {
   return taverage = sumT / N; 
 }
 
-int heat_write( const doubleArray arr2, double dx, const int nx, const int nxproc, const int rank ){
+int heat_write( const doubleArray arr2, double dx, const int nx, const int nxproc, const int rank , const double proc_origin){
 
   char outchar [50];
   sprintf(outchar,"output%d.dat",rank);
 
   ofstream output;
   output.open(outchar);
-  for (int i = 0 ; i < nxproc ; ++i ){
-    for ( int j = 0 ; j < nx; ++j){
-      output <<  i * dx << " ";
-      output <<  j * dx << " ";
+  for (int i = 0 ; i < nxproc ; i++ ){
+    for ( int j = 0 ; j < nx; j++){
+      output << proc_origin +  i * dx << " ";
+      output << proc_origin +  j * dx << " ";
       output << arr2[i][j] << std::endl;
-      if( i == (nx-1) && j == (nx-1)){
+      if( i == (nxproc-1) && j == (nx-1)){
         output << std::endl;
       }
     }

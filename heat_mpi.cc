@@ -81,8 +81,8 @@ int main (int argc, char *argv[] ){
   heat_initialize(arr1, nx, nxproc, proc_origin, dx);
   heat_initialize(arr2, nx, nxproc, proc_origin, dx); 
 
-  std::cout << "nx_proc = " << nxproc << std::endl;
-  std::cout << "proc_origin = " << proc_origin << std::endl;
+  std::cout << "for rank " << rank << " there are " <<  nxproc; 
+  std::cout << " grid cells beginning at  " << proc_origin << std::endl;
   int token = 0;
 
    //solve routine. 
@@ -120,7 +120,7 @@ int main (int argc, char *argv[] ){
   }
 
   // Write the file to output.dat
-  heat_write( arr2, dx, nx, nxproc ,rank);
+  heat_write( arr2, dx, nx, nxproc ,rank, proc_origin);
         
   /* get local averages and sum up to get total average */ 
 
@@ -134,8 +134,8 @@ int main (int argc, char *argv[] ){
   std::cout << ((double)(time(NULL)-beginTime));
   std::cout << std::endl;
   
-  doubleArrayRemove(arr1, nx);
-  doubleArrayRemove(arr2, nx);
+  doubleArrayRemove(arr1, nx, nxproc);
+  doubleArrayRemove(arr2, nx, nxproc);
 
   return 0;
 }
